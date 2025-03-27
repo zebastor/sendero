@@ -20,11 +20,8 @@ public class Usuario implements UserDetails {
     private String username;
     private String password;
     private String nombre;
-    private String apellido;
     private String email;
-    private String telefono;
     private boolean enabled = true;
-    private String perfil;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "usuario")
     @JsonIgnore
@@ -34,16 +31,16 @@ public class Usuario implements UserDetails {
 
     }
 
-    public Usuario(Long id, String username, String password, String nombre, String apellido, String email, String telefono, boolean enabled, String perfil) {
+    public Usuario(Long id, String username, String password, String nombre, String email, boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.nombre = nombre;
-        this.apellido = apellido;
+
         this.email = email;
-        this.telefono = telefono;
+
         this.enabled = enabled;
-        this.perfil = perfil;
+
     }
 
     public Long getId() {
@@ -102,13 +99,7 @@ public class Usuario implements UserDetails {
         this.nombre = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
-    }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
 
     public String getEmail() {
         return email;
@@ -118,13 +109,7 @@ public class Usuario implements UserDetails {
         this.email = email;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
 
     public boolean isEnabled() {
         return enabled;
@@ -134,13 +119,6 @@ public class Usuario implements UserDetails {
         this.enabled = enabled;
     }
 
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
 
     public Set<UsuarioRol> getUsuarioRoles() {
         return usuarioRoles;
