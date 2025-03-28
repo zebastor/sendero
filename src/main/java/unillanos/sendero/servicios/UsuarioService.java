@@ -1,6 +1,8 @@
 package unillanos.sendero.servicios;
 
 import java.util.Set;
+
+import unillanos.sendero.modelo.Reino;
 import unillanos.sendero.modelo.Usuario;
 import unillanos.sendero.modelo.UsuarioRol;
 

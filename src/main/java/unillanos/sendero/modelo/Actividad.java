@@ -12,12 +12,16 @@ import java.util.Set;
 public class Actividad {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String titulo;
     private Date fecha;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "actividad")
     private Set<UsuarioActividad> usuarioActividades = new HashSet<>();
+
+    @ManyToOne
+    private Estacion estacion;
 
     public Actividad() {}
 
@@ -46,5 +50,13 @@ public class Actividad {
 
     public void setUsuarioActividades(Set<UsuarioActividad> usuarioActividades) {
         this.usuarioActividades = usuarioActividades;
+    }
+
+    public Estacion getEstacion() {
+        return estacion;
+    }
+
+    public void setEstacion(Estacion estacion) {
+        this.estacion = estacion;
     }
 }

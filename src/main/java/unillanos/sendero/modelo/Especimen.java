@@ -10,6 +10,7 @@ import java.util.Set;
 public class Especimen {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nombre;
 
@@ -21,6 +22,13 @@ public class Especimen {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
     private Set<EspecimenEstacion> especimenEstaciones = new HashSet<>();
+
+
+    @ManyToOne
+    private Reino reino;
+
+    @ManyToOne
+    private Etapa etapa;
 
     public Especimen() {
     }
@@ -69,5 +77,21 @@ public class Especimen {
 
     public void setEspecimenEstaciones(Set<EspecimenEstacion> especimenEstaciones) {
         this.especimenEstaciones = especimenEstaciones;
+    }
+
+    public Reino getReino() {
+        return reino;
+    }
+
+    public void setReino(Reino reino) {
+        this.reino = reino;
+    }
+
+    public Etapa getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Etapa etapa) {
+        this.etapa = etapa;
     }
 }

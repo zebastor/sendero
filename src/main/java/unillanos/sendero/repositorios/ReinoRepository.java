@@ -1,4 +1,7 @@
 package unillanos.sendero.repositorios;
 
-public interface ReinoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import unillanos.sendero.modelo.Reino;
+
+public interface ReinoRepository extends JpaRepository<Reino, Integer> {
 }

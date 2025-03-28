@@ -1,5 +1,6 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -9,10 +10,12 @@ import java.util.Set;
 @Table(name = "reinos")
 public class Reino {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nombre;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "reino")
+    @JsonIgnore
     private Set<Especimen> especimenes = new HashSet<>();
 
     public Reino() {

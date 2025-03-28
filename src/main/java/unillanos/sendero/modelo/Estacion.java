@@ -26,10 +26,10 @@ public class Estacion {
     private String elementoInteractivo;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "estacion")
-    private Set<Especimen> especimenes = new HashSet<>();
+    private Set<EspecimenEstacion> especimenEstaciones = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
-    private Set<Imagen> imagenes = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "estacion")
+    private Set<Actividad> actividades = new HashSet<>();
 
     public Estacion(){
 
@@ -43,6 +43,67 @@ public class Estacion {
         this.longitud = longitud;
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(String longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getElementoInteractivo() {
+        return elementoInteractivo;
+    }
+
+    public void setElementoInteractivo(String elementoInteractivo) {
+        this.elementoInteractivo = elementoInteractivo;
+    }
+
+    public Set<EspecimenEstacion> getEspecimenEstaciones() {
+        return especimenEstaciones;
+    }
+
+    public void setEspecimenEstaciones(Set<EspecimenEstacion> especimenEstaciones) {
+        this.especimenEstaciones = especimenEstaciones;
+    }
+
+    public Set<Actividad> getActividades() {
+        return actividades;
+    }
+
+    public void setActividades(Set<Actividad> actividades) {
+        this.actividades = actividades;
+    }
 }

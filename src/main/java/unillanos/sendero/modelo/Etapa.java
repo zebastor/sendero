@@ -8,6 +8,9 @@ import java.util.Set;
 @Entity
 @Table(name = "etapas")
 public class Etapa {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nombre;
 
