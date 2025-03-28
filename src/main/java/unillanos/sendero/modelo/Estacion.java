@@ -23,9 +23,13 @@ public class Estacion {
     private String nombre;
     private String latitud;
     private String longitud;
+    private String elementoInteractivo;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "estacion")
-    private Set<UsuarioRol> usuarioRoles = new HashSet<>();
+    private Set<Especimen> especimenes = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
+    private Set<Imagen> imagenes = new HashSet<>();
 
     public Estacion(){
 
@@ -37,38 +41,6 @@ public class Estacion {
         this.nombre = nombre;
         this.latitud = latitud;
         this.longitud = longitud;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
-
-    public String getNombre() {return nombre;    }
-    public void setNombre(String nombre) {this.nombre = nombre;    }
-
-    public String getLatitud() {return latitud;}
-    public void setLatitud(String latitud) {this.latitud = latitud;    }
-
-    public String getLongitud() {return longitud;    }
-    public void setLongitud(String longitud) {this.longitud = longitud;    }
-
-
-    public Set<UsuarioRol> getUsuarioRoles() {
-        return usuarioRoles;
-    }
-
-    public void setUsuarioRoles(Set<UsuarioRol> usuarioRoles) {
-        this.usuarioRoles = usuarioRoles;
     }
 
 
