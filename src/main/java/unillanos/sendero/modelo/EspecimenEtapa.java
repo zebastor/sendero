@@ -8,10 +8,10 @@ public class EspecimenEtapa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int especimenEtapaId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Especimen especimen;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Etapa etapa;
 
     public int getEspecimenEtapaId() {

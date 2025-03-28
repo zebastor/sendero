@@ -15,7 +15,6 @@ public class Reino {
     private String nombre;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "reino")
-    @JsonIgnore
     private Set<Especimen> especimenes = new HashSet<>();
 
     public Reino() {

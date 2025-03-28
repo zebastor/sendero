@@ -20,10 +20,9 @@ public class Etapa {
     public Etapa() {
     }
 
-    public Etapa(int id, String nombre, Set<EspecimenEtapa> especimenEtapas) {
+    public Etapa(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.especimenEtapas = especimenEtapas;
     }
 
     public int getId() {

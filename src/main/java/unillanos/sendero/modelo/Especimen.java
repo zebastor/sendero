@@ -1,5 +1,6 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -27,8 +28,6 @@ public class Especimen {
     @ManyToOne
     private Reino reino;
 
-    @ManyToOne
-    private Etapa etapa;
 
     public Especimen() {
     }
@@ -87,11 +86,5 @@ public class Especimen {
         this.reino = reino;
     }
 
-    public Etapa getEtapa() {
-        return etapa;
-    }
 
-    public void setEtapa(Etapa etapa) {
-        this.etapa = etapa;
-    }
 }
