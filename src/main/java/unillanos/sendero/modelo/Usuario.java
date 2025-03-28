@@ -23,9 +23,12 @@ public class Usuario implements UserDetails {
     private String email;
     private boolean enabled = true;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "usuario")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "usuario", orphanRemoval = true)
     @JsonIgnore
     private Set<UsuarioRol> usuarioRoles = new HashSet<>();
+
+
+
 
     public Usuario(){
 
@@ -83,6 +86,7 @@ public class Usuario implements UserDetails {
         return autoridades;
     }
 
+
     public String getPassword() {
         return password;
     }
@@ -127,4 +131,18 @@ public class Usuario implements UserDetails {
     public void setUsuarioRoles(Set<UsuarioRol> usuarioRoles) {
         this.usuarioRoles = usuarioRoles;
     }
+
+
+
+    @Transient
+    private Long rolId;  // Este campo solo se usa para recibir el valor del request
+
+    public Long getRolId() {
+        return rolId;
+    }
+
+    public void setRolId(Long rolId) {
+        this.rolId = rolId;
+    }
+
 }

@@ -1,8 +1,10 @@
 package unillanos.sendero.controladores;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import unillanos.sendero.modelo.Reino;
 import unillanos.sendero.modelo.Rol;
 import unillanos.sendero.modelo.Usuario;
 import unillanos.sendero.modelo.UsuarioRol;
@@ -51,5 +53,15 @@ public class UsuarioController {
     public void eliminarUsuario(@PathVariable("usuarioId") Long usuarioId){
         usuarioService.eliminarUsuario(usuarioId);
     }
+//agregar actualizar obtenerlist
 
+    @GetMapping("/")
+    public ResponseEntity<?> listarUsuarios(){
+        return ResponseEntity.ok(usuarioService.obtenerUsuarios());
+    }
+
+    @PutMapping("/")
+    public Usuario actualizarUsuario(@RequestBody Usuario usuario){
+        return usuarioService.actualizarUsuario(usuario);
+    }
 }
