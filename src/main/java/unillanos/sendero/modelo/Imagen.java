@@ -10,7 +10,7 @@ public class Imagen {
     private int id;
     private String direccion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Especimen especimen;
 
     public int getId() {

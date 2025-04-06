@@ -1,5 +1,6 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -15,6 +16,7 @@ public class Reino {
     private String nombre;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "reino")
+    @JsonIgnore
     private Set<Especimen> especimenes = new HashSet<>();
 
     public Reino() {
@@ -41,7 +43,7 @@ public class Reino {
         this.nombre = nombre;
     }
 
-    public Set<Especimen> getEspecimen() {
+    public Set<Especimen> getEspecimenes() {
         return especimenes;
     }
 

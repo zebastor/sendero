@@ -1,6 +1,7 @@
 package unillanos.sendero.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -18,24 +19,33 @@ public class Estacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private int numero;
     private String nombre;
     private String latitud;
     private String longitud;
     private String elementoInteractivo;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "estacion")
-    private Set<EspecimenEstacion> especimenEstaciones = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "estacion")
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "estacion_especimen",
+            joinColumns = @JoinColumn(name = "estacion_id"),
+            inverseJoinColumns = @JoinColumn(name = "especimen_id")
+    )
+    private Set<Especimen> especimenes = new HashSet<>();
+
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "estacion")
     private Set<Actividad> actividades = new HashSet<>();
 
     public Estacion(){
 
     }
 
-    public Estacion(Long id, int numero, String nombre, String latitud, String longitud) {
+    public Estacion(int id, int numero, String nombre, String latitud, String longitud) {
         this.id = id;
         this.numero = numero;
         this.nombre = nombre;
@@ -43,11 +53,11 @@ public class Estacion {
         this.longitud = longitud;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -91,12 +101,14 @@ public class Estacion {
         this.elementoInteractivo = elementoInteractivo;
     }
 
-    public Set<EspecimenEstacion> getEspecimenEstaciones() {
-        return especimenEstaciones;
+
+
+    public Set<Especimen> getEspecimenes() {
+        return especimenes;
     }
 
-    public void setEspecimenEstaciones(Set<EspecimenEstacion> especimenEstaciones) {
-        this.especimenEstaciones = especimenEstaciones;
+    public void setEspecimenes(Set<Especimen> especimenes) {
+        this.especimenes = especimenes;
     }
 
     public Set<Actividad> getActividades() {

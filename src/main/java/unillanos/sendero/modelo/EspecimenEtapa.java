@@ -1,17 +1,21 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-@Entity
+//@Entity
 public class EspecimenEtapa {
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int especimenEtapaId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference("especimen-etapa")
     private Especimen especimen;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JsonBackReference("especimen-etapa")
     private Etapa etapa;
 
     public int getEspecimenEtapaId() {
@@ -36,5 +40,5 @@ public class EspecimenEtapa {
 
     public void setEtapa(Etapa etapa) {
         this.etapa = etapa;
-    }
+    }*/
 }

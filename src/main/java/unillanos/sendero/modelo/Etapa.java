@@ -1,5 +1,8 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -14,8 +17,9 @@ public class Etapa {
     private int id;
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "etapa")
-    private Set<EspecimenEtapa> especimenEtapas = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "etapas") // ¡Usa mappedBy!
+    private Set<Especimen> especimenes = new HashSet<>();
 
     public Etapa() {
     }
@@ -41,11 +45,11 @@ public class Etapa {
         this.nombre = nombre;
     }
 
-    public Set<EspecimenEtapa> getEspecimenEtapas() {
-        return especimenEtapas;
+    public Set<Especimen> getEspecimenes() {
+        return especimenes;
     }
 
-    public void setEspecimenEtapas(Set<EspecimenEtapa> especimenEtapas) {
-        this.especimenEtapas = especimenEtapas;
+    public void setEspecimenes(Set<Especimen> especimenes) {
+        this.especimenes = especimenes;
     }
 }

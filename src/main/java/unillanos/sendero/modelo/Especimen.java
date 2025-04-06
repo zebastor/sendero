@@ -1,5 +1,7 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -15,17 +17,23 @@ public class Especimen {
     private int id;
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
-    private Set<EspecimenEtapa> especimenEtapas = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "especimen_etapa",
+            joinColumns = @JoinColumn(name = "especimen_id"),
+            inverseJoinColumns = @JoinColumn(name = "etapa_id")
+    )
+    private Set<Etapa> etapas = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
     private Set<Imagen> imagenes = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
-    private Set<EspecimenEstacion> especimenEstaciones = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "especimenes") // ¡Usa mappedBy!
+    private Set<Estacion> estaciones = new HashSet<>();
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Reino reino;
 
 
@@ -53,12 +61,12 @@ public class Especimen {
         this.nombre = nombre;
     }
 
-    public Set<EspecimenEtapa> getEspecimenEtapas() {
-        return especimenEtapas;
+    public Set<Etapa> getEtapas() {
+        return etapas;
     }
 
-    public void setEspecimenEtapas(Set<EspecimenEtapa> especimenEtapas) {
-        this.especimenEtapas = especimenEtapas;
+    public void setEtapas(Set<Etapa> etapas) {
+        this.etapas = etapas;
     }
 
     public Set<Imagen> getImagenes() {
@@ -70,12 +78,12 @@ public class Especimen {
     }
 
 
-    public Set<EspecimenEstacion> getEspecimenEstaciones() {
-        return especimenEstaciones;
+    public Set<Estacion> getEstaciones() {
+        return estaciones;
     }
 
-    public void setEspecimenEstaciones(Set<EspecimenEstacion> especimenEstaciones) {
-        this.especimenEstaciones = especimenEstaciones;
+    public void setEstaciones(Set<Estacion> estaciones) {
+        this.estaciones = estaciones;
     }
 
     public Reino getReino() {

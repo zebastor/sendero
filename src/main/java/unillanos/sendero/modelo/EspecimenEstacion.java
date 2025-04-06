@@ -2,9 +2,9 @@ package unillanos.sendero.modelo;
 
 import jakarta.persistence.*;
 
-@Entity
+//@Entity
 public class EspecimenEstacion {
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int especimenEstacionId;
 
@@ -36,5 +36,5 @@ public class EspecimenEstacion {
 
     public void setEstacion(Estacion estacion) {
         this.estacion = estacion;
-    }
+    }*/
 }

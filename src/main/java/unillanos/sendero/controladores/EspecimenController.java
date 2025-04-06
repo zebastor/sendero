@@ -25,9 +25,8 @@ public class EspecimenController {
 
 
     @GetMapping("/")
-    public Set<Especimen> listarEspecimenes() {
-        // Si algunas relaciones son lazy, considera forzar su inicialización o usar DTOs.
-        return especimenService.obtenerEspecimenes();
+    public ResponseEntity<?> listarEspecimenes() {
+        return ResponseEntity.ok(especimenService.obtenerEspecimenes());
     }
 
 }
