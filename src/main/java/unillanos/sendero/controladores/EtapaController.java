@@ -27,4 +27,21 @@ public class EtapaController {
     public ResponseEntity<?> listarEtapas(){
         return ResponseEntity.ok(etapaService.obtenerEtapas());
     }
+
+
+    @GetMapping("/{id}")
+    public Etapa listarEtapaPorId(@PathVariable("id") Integer id){
+        return etapaService.obtenerEtapa(id);
+    }
+
+
+    @PutMapping("/")
+    public Etapa actualizarEtapa(@RequestBody Etapa etapa){
+        return etapaService.actualizarEtapa(etapa);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarEtapa(@PathVariable("id") Integer id){
+        etapaService.eliminarEtapa(id);
+    }
 }

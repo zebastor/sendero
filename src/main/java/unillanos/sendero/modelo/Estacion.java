@@ -37,7 +37,7 @@ public class Estacion {
     )
     private Set<Especimen> especimenes = new HashSet<>();
 
-
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "estacion")
     private Set<Actividad> actividades = new HashSet<>();
 

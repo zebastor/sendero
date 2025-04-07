@@ -3,10 +3,10 @@ package unillanos.sendero.modelo;
 
 import jakarta.persistence.*;
 
-@Entity
+//@Entity
 public class UsuarioActividad {
 
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int usuarioActividadId;
 
@@ -40,5 +40,5 @@ public class UsuarioActividad {
 
     public void setActividad(Actividad actividad) {
         this.actividad = actividad;
-    }
+    }*/
 }

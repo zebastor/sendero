@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unillanos.sendero.modelo.Especimen;
+import unillanos.sendero.modelo.Etapa;
 import unillanos.sendero.modelo.Reino;
 import unillanos.sendero.servicios.EspecimenService;
+import unillanos.sendero.servicios.ImagenService;
 
 import java.util.Set;
 
@@ -16,6 +18,9 @@ import java.util.Set;
 public class EspecimenController {
     @Autowired
     private EspecimenService especimenService;
+
+    @Autowired
+    private ImagenService imagenService;
 
     @PostMapping("/")
     public ResponseEntity<Especimen> guardarEspecimen(@RequestBody Especimen especimen){
@@ -27,6 +32,23 @@ public class EspecimenController {
     @GetMapping("/")
     public ResponseEntity<?> listarEspecimenes() {
         return ResponseEntity.ok(especimenService.obtenerEspecimenes());
+    }
+
+
+    @GetMapping("/{id}")
+    public Especimen listarEspecimenPorId(@PathVariable("id") Integer id){
+        return especimenService.obtenerEspecimen(id);
+    }
+
+
+    @PutMapping("/")
+    public Especimen actualizarEspecimen(@RequestBody Especimen especimen){
+        return especimenService.actualizarEspecimen(especimen);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarEspecimen(@PathVariable("id") Integer id){
+        especimenService.eliminarEspecimen(id);
     }
 
 }

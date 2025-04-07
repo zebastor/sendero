@@ -1,5 +1,7 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,7 +12,9 @@ public class Imagen {
     private int id;
     private String direccion;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Especimen especimen;
 
     public int getId() {

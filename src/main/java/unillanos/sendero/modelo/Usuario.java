@@ -1,5 +1,6 @@
 package unillanos.sendero.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,9 @@ public class Usuario implements UserDetails {
     @JsonIgnore
     private Set<UsuarioRol> usuarioRoles = new HashSet<>();
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "usuarios")// Evita ciclo
+    private Set<Actividad> actividades = new HashSet<>();
 
 
 
@@ -75,6 +79,14 @@ public class Usuario implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Set<Actividad> getActividades() {
+        return actividades;
+    }
+
+    public void setActividades(Set<Actividad> actividades) {
+        this.actividades = actividades;
     }
 
     @Override

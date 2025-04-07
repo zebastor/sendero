@@ -1,6 +1,7 @@
 package unillanos.sendero.modelo;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -17,8 +18,14 @@ public class Actividad {
     private String titulo;
     private Date fecha;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "actividad")
-    private Set<UsuarioActividad> usuarioActividades = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "actividad_usuario",
+            joinColumns = @JoinColumn(name = "actividad_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )// Serializa desde aquí
+    private Set<Usuario> usuarios = new HashSet<>();
+
 
     @ManyToOne
     private Estacion estacion;
@@ -43,13 +50,12 @@ public class Actividad {
 
     public void setFecha(Date fecha) {        this.fecha = fecha;}
 
-
-    public Set<UsuarioActividad> getUsuarioActividades() {
-        return usuarioActividades;
+    public Set<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public void setUsuarioActividades(Set<UsuarioActividad> usuarioActividades) {
-        this.usuarioActividades = usuarioActividades;
+    public void setUsuarios(Set<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     public Estacion getEstacion() {

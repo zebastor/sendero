@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unillanos.sendero.modelo.Especimen;
 import unillanos.sendero.modelo.Estacion;
+import unillanos.sendero.modelo.Etapa;
 import unillanos.sendero.servicios.EspecimenService;
 import unillanos.sendero.servicios.EstacionService;
 
@@ -26,6 +27,23 @@ public class EstacionController {
     @GetMapping("/")
     public ResponseEntity<?> listarEstaciones() {
         return ResponseEntity.ok(estacionService.obtenerEstaciones());
+    }
+
+
+    @GetMapping("/{id}")
+    public Estacion listarEstacionPorId(@PathVariable("id") Integer id){
+        return estacionService.obtenerEstacion(id);
+    }
+
+
+    @PutMapping("/")
+    public Estacion actualizarEstacion(@RequestBody Estacion estacion){
+        return estacionService.actualizarEstacion(estacion);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarEstacion(@PathVariable("id") Integer id){
+        estacionService.eliminarEstacion(id);
     }
 
 }

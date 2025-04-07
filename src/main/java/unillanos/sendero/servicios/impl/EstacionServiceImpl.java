@@ -3,9 +3,7 @@ package unillanos.sendero.servicios.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import unillanos.sendero.modelo.Especimen;
-import unillanos.sendero.modelo.Estacion;
-import unillanos.sendero.modelo.Etapa;
+import unillanos.sendero.modelo.*;
 import unillanos.sendero.repositorios.EspecimenRepository;
 import unillanos.sendero.repositorios.EstacionRepository;
 import unillanos.sendero.repositorios.EtapaRepository;
@@ -38,8 +36,29 @@ public class EstacionServiceImpl implements EstacionService {
 
     @Override
     public Estacion actualizarEstacion(Estacion estacion) {
-        return estacionRepository.save(estacion);
+        // Primero, obtenemos la estación existente por su ID
+        Estacion estacionExistente = estacionRepository.findById(estacion.getId())
+                .orElseThrow(() -> new RuntimeException("Estacion no encontrada"));
+
+        // Actualizamos los campos básicos
+        estacionExistente.setNombre(estacion.getNombre());
+        estacionExistente.setLatitud(estacion.getLatitud());
+        estacionExistente.setLongitud(estacion.getLongitud());
+        estacionExistente.setNumero(estacion.getNumero());
+        estacionExistente.setElementoInteractivo(estacion.getElementoInteractivo());
+
+        // Actualizamos la colección de especimenes solo si se proveen en la petición
+        if (estacion.getEspecimenes() != null && !estacion.getEspecimenes().isEmpty()) {
+            Set<Especimen> especimenes = estacion.getEspecimenes().stream()
+                    .map(especimen -> especimenRepository.findById(especimen.getId())
+                            .orElseThrow(() -> new RuntimeException("Especimen no encontrado")))
+                    .collect(Collectors.toSet());
+            estacionExistente.setEspecimenes(especimenes);
+        }
+
+        return estacionRepository.save(estacionExistente);
     }
+
 
     @Override
     public Set<Estacion> obtenerEstaciones() {

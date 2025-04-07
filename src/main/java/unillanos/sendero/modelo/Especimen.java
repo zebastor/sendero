@@ -25,7 +25,8 @@ public class Especimen {
     )
     private Set<Etapa> etapas = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen",  orphanRemoval = true)
+    @JsonManagedReference
     private Set<Imagen> imagenes = new HashSet<>();
 
     @JsonIgnore
