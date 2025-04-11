@@ -1,26 +1,25 @@
 package unillanos.sendero.controladores;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unillanos.sendero.modelo.Especimen;
-import unillanos.sendero.modelo.Etapa;
-import unillanos.sendero.modelo.Reino;
 import unillanos.sendero.servicios.EspecimenService;
 import unillanos.sendero.servicios.ImagenService;
 
-import java.util.Set;
 
 @RestController
 @RequestMapping("/especimen")
 @CrossOrigin("*")
 public class EspecimenController {
+
+
     @Autowired
     private EspecimenService especimenService;
 
     @Autowired
     private ImagenService imagenService;
+
 
     @PostMapping("/")
     public ResponseEntity<Especimen> guardarEspecimen(@RequestBody Especimen especimen){

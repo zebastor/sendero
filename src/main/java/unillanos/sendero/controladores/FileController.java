@@ -28,25 +28,53 @@ public FileController(){try {
 
     private final Path rootLocation = Paths.get("uploads");
 
-    @PostMapping("/especimen/")
-    public ResponseEntity<Map<String, Object>> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    // Cambia el endpoint para aceptar múltiples archivos
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> handleFileUpload(
+            @RequestParam("file") MultipartFile[] files) {
+
         Map<String, Object> response = new HashMap<>();
+        List<String> uploadedFiles = new ArrayList<>();
+        List<String> duplicates = new ArrayList<>();
 
         try {
-            // Crea el directorio si no existe
             Files.createDirectories(rootLocation);
 
-            // Guarda el archivo
-            Files.copy(file.getInputStream(), rootLocation.resolve(file.getOriginalFilename()));
+            // 1. Verificar archivos duplicados
+            for (MultipartFile file : files) {
+                Path destination = rootLocation.resolve(file.getOriginalFilename());
+                if (Files.exists(destination)) {
+                    duplicates.add(file.getOriginalFilename());
+                }
+            }
+
+            // 2. Si hay duplicados, retornar error con detalles
+            if (!duplicates.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Archivos duplicados detectados");
+                response.put("duplicates", duplicates);
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT) // Código 409
+                        .body(response); // Incluir detalles en el cuerpo
+            }
+
+            // 3. Guardar archivos si no hay duplicados
+            for (MultipartFile file : files) {
+                Path destination = rootLocation.resolve(file.getOriginalFilename());
+                Files.copy(file.getInputStream(), destination);
+                uploadedFiles.add(file.getOriginalFilename());
+            }
 
             response.put("success", true);
-            response.put("message", "Archivo subido con éxito: " + file.getOriginalFilename());
+            response.put("files", uploadedFiles);
             return ResponseEntity.ok(response);
 
         } catch (IOException e) {
             response.put("success", false);
-            response.put("message", "Error al subir el archivo: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            response.put("message", "Error interno: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(response);
         }
     }
 

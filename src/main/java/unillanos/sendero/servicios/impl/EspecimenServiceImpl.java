@@ -54,15 +54,12 @@ public class EspecimenServiceImpl implements EspecimenService {
 
     @Override
     public Especimen actualizarEspecimen(Especimen especimen) {
-        // Primero, obtenemos el espécimen existente por su ID
         Especimen especimenExistente = especimenRepository.findById(especimen.getId())
                 .orElseThrow(() -> new RuntimeException("Especimen no encontrado"));
 
-        // Actualizamos los campos básicos
         especimenExistente.setNombre(especimen.getNombre());
         especimenExistente.setDescripcion(especimen.getDescripcion());
 
-        // Actualizamos la relación con Reino (si se envía uno válido)
         if (especimen.getReino() != null && especimen.getReino().getId() != 0) {
             Reino reino = reinoRepository.findById(especimen.getReino().getId())
                     .orElseThrow(() -> new RuntimeException("Reino no encontrado"));
@@ -71,39 +68,28 @@ public class EspecimenServiceImpl implements EspecimenService {
             especimenExistente.setReino(null);
         }
 
-        // Actualizamos la relación con Etapas: buscamos cada etapa por su ID y las asignamos
         Set<Etapa> etapas = especimen.getEtapas().stream()
                 .map(etapa -> etapaRepository.findById(etapa.getId())
                         .orElseThrow(() -> new RuntimeException("Etapa no encontrada")))
                 .collect(Collectors.toSet());
         especimenExistente.setEtapas(etapas);
 
-        // Actualizamos las imágenes sin duplicar aquellas que ya existan (según "direccion")
+        // Manejar imágenes
         Set<Imagen> imagenesExistentes = especimenExistente.getImagenes();
         for (Imagen imagenNueva : especimen.getImagenes()) {
             boolean existe = imagenesExistentes.stream()
                     .anyMatch(imagenExistente -> imagenExistente.getDireccion().equals(imagenNueva.getDireccion()));
             if (!existe) {
-                imagenNueva.setEspecimen(especimenExistente);
+                imagenNueva.setEspecimen(especimenExistente); // Relación bidireccional
                 imagenesExistentes.add(imagenNueva);
             }
         }
 
-
-
-        Set<Imagen3d> imagenes3dExistentes = especimenExistente.getImagenes3d();
-        for (Imagen3d imagen3dNueva : especimen.getImagenes3d()) {
-            boolean existe = imagenes3dExistentes.stream()
-                    .anyMatch(imagen3dExistente -> imagen3dExistente.getDireccion().equals(imagen3dNueva.getDireccion()));
-            if (!existe) {
-                imagen3dNueva.setEspecimen(especimenExistente);
-                imagenes3dExistentes.add(imagen3dNueva);
-            }
-        }
-        // Si deseas remover imágenes que ya no se incluyan en la actualización, podrías aplicar una lógica adicional
+        especimenExistente.setImagenes(imagenesExistentes);
 
         return especimenRepository.save(especimenExistente);
     }
+
 
 
 
