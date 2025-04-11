@@ -17,6 +17,9 @@ public class Especimen {
     private int id;
     private String nombre;
 
+    @Column(name = "descripcion", nullable = true, columnDefinition = "TEXT")
+    private String descripcion;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "especimen_etapa",
@@ -28,6 +31,11 @@ public class Especimen {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen",  orphanRemoval = true)
     @JsonManagedReference
     private Set<Imagen> imagenes = new HashSet<>();
+
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "especimen",  orphanRemoval = true)
+    @JsonManagedReference
+    private Set<Imagen3d> imagenes3d = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany(mappedBy = "especimenes") // ¡Usa mappedBy!
@@ -41,9 +49,10 @@ public class Especimen {
     public Especimen() {
     }
 
-    public Especimen(int id, String nombre) {
+    public Especimen(int id, String nombre, String descripcion) {
         this.id = id;
         this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
     public int getId() {
@@ -95,5 +104,19 @@ public class Especimen {
         this.reino = reino;
     }
 
+    public Set<Imagen3d> getImagenes3d() {
+        return imagenes3d;
+    }
 
+    public void setImagenes3d(Set<Imagen3d> imagenes3d) {
+        this.imagenes3d = imagenes3d;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

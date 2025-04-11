@@ -3,10 +3,7 @@ package unillanos.sendero.servicios.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import unillanos.sendero.modelo.Especimen;
-import unillanos.sendero.modelo.Etapa;
-import unillanos.sendero.modelo.Imagen;
-import unillanos.sendero.modelo.Reino;
+import unillanos.sendero.modelo.*;
 import unillanos.sendero.repositorios.EspecimenRepository;
 import unillanos.sendero.repositorios.EtapaRepository;
 import unillanos.sendero.repositorios.ImagenRepository;
@@ -48,6 +45,8 @@ public class EspecimenServiceImpl implements EspecimenService {
         // Para cada imagen, asignar el espécimen
         especimen.getImagenes().forEach(imagen -> imagen.setEspecimen(especimen));
 
+        especimen.getImagenes3d().forEach(imagen3d -> imagen3d.setEspecimen(especimen));
+
         // Guardar el espécimen, lo que gracias al cascade persistirá las imágenes
         return especimenRepository.save(especimen);
     }
@@ -61,6 +60,7 @@ public class EspecimenServiceImpl implements EspecimenService {
 
         // Actualizamos los campos básicos
         especimenExistente.setNombre(especimen.getNombre());
+        especimenExistente.setDescripcion(especimen.getDescripcion());
 
         // Actualizamos la relación con Reino (si se envía uno válido)
         if (especimen.getReino() != null && especimen.getReino().getId() != 0) {
@@ -86,6 +86,18 @@ public class EspecimenServiceImpl implements EspecimenService {
             if (!existe) {
                 imagenNueva.setEspecimen(especimenExistente);
                 imagenesExistentes.add(imagenNueva);
+            }
+        }
+
+
+
+        Set<Imagen3d> imagenes3dExistentes = especimenExistente.getImagenes3d();
+        for (Imagen3d imagen3dNueva : especimen.getImagenes3d()) {
+            boolean existe = imagenes3dExistentes.stream()
+                    .anyMatch(imagen3dExistente -> imagen3dExistente.getDireccion().equals(imagen3dNueva.getDireccion()));
+            if (!existe) {
+                imagen3dNueva.setEspecimen(especimenExistente);
+                imagenes3dExistentes.add(imagen3dNueva);
             }
         }
         // Si deseas remover imágenes que ya no se incluyan en la actualización, podrías aplicar una lógica adicional
