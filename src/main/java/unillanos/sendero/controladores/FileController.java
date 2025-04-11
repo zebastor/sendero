@@ -115,4 +115,27 @@ public FileController(){try {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @DeleteMapping("/files/{filename:.+}")
+    public ResponseEntity<Map<String, Object>> deleteFile(@PathVariable String filename) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Path file = rootLocation.resolve(filename);
+            boolean deleted = Files.deleteIfExists(file);
+
+            if (deleted) {
+                response.put("success", true);
+                response.put("message", "Archivo eliminado con éxito");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "El archivo no existe");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (IOException e) {
+            response.put("success", false);
+            response.put("message", "Error al eliminar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
