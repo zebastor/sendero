@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unillanos.sendero.modelo.*;
-import unillanos.sendero.repositorios.EspecimenRepository;
-import unillanos.sendero.repositorios.EtapaRepository;
-import unillanos.sendero.repositorios.ImagenRepository;
-import unillanos.sendero.repositorios.ReinoRepository;
+import unillanos.sendero.repositorios.*;
 import unillanos.sendero.servicios.EspecimenService;
 
 import java.util.LinkedHashSet;
@@ -24,6 +21,9 @@ public class EspecimenServiceImpl implements EspecimenService {
     private EtapaRepository etapaRepository;
     @Autowired
     private ImagenRepository imagenRepository;
+
+    @Autowired
+    private Imagen3dRepository imagen3dRepository;
 
     @Override
     @Transactional
@@ -85,7 +85,23 @@ public class EspecimenServiceImpl implements EspecimenService {
             }
         }
 
+
+
         especimenExistente.setImagenes(imagenesExistentes);
+
+
+        // Manejar imágenes
+        Set<Imagen3d> imagenes3dExistentes = especimenExistente.getImagenes3d();
+        for (Imagen3d imagen3dNueva  : especimen.getImagenes3d()) {
+            boolean existe = imagenes3dExistentes.stream()
+                    .anyMatch(imagen3dExistente -> imagen3dExistente.getDireccion().equals(imagen3dNueva.getDireccion()));
+            if (!existe) {
+                imagen3dNueva.setEspecimen(especimenExistente); // Relación bidireccional
+                imagenes3dExistentes.add(imagen3dNueva);
+            }
+        }
+
+        especimenExistente.setImagenes3d(imagenes3dExistentes);
 
         return especimenRepository.save(especimenExistente);
     }
