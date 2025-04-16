@@ -71,6 +71,11 @@ public class EstacionServiceImpl implements EstacionService {
     }
 
     @Override
+    public Estacion obtenerEstacionPorNumero(Integer numero) {
+        return estacionRepository.findByNumero(numero);
+    }
+
+    @Override
     public void eliminarEstacion(Integer id) {
         Estacion estacion = new Estacion();
         estacion.setId(id);

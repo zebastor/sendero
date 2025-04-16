@@ -7,6 +7,7 @@ import unillanos.sendero.modelo.*;
 import unillanos.sendero.repositorios.*;
 import unillanos.sendero.servicios.EspecimenService;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,21 +36,47 @@ public class EspecimenServiceImpl implements EspecimenService {
                 .collect(Collectors.toSet());
         especimen.setEtapas(etapas);
 
-        // Manejar reino existente
+        // Manejar reino existente (si se especifica)
         if (especimen.getReino() != null && especimen.getReino().getId() != 0) {
             Reino reino = reinoRepository.findById(especimen.getReino().getId())
                     .orElseThrow(() -> new RuntimeException("Reino no encontrado"));
             especimen.setReino(reino);
+        } else {
+            especimen.setReino(null);
         }
 
-        // Para cada imagen, asignar el espécimen
-        especimen.getImagenes().forEach(imagen -> imagen.setEspecimen(especimen));
+        // Manejar imágenes: se filtran duplicados según la dirección
+        Set<Imagen> imagenesNuevas = new HashSet<>();
+        if (especimen.getImagenes() != null) {
+            for (Imagen imagen : especimen.getImagenes()) {
+                boolean existe = imagenesNuevas.stream()
+                        .anyMatch(img -> img.getDireccion().equals(imagen.getDireccion()));
+                if (!existe) {
+                    imagen.setEspecimen(especimen); // Relación bidireccional
+                    imagenesNuevas.add(imagen);
+                }
+            }
+        }
+        especimen.setImagenes(imagenesNuevas);
 
-        especimen.getImagenes3d().forEach(imagen3d -> imagen3d.setEspecimen(especimen));
+        // Manejar imágenes 3D: también se filtran duplicados según la dirección
+        Set<Imagen3d> imagenes3dNuevas = new HashSet<>();
+        if (especimen.getImagenes3d() != null) {
+            for (Imagen3d imagen3d : especimen.getImagenes3d()) {
+                boolean existe = imagenes3dNuevas.stream()
+                        .anyMatch(img -> img.getDireccion().equals(imagen3d.getDireccion()));
+                if (!existe) {
+                    imagen3d.setEspecimen(especimen); // Relación bidireccional
+                    imagenes3dNuevas.add(imagen3d);
+                }
+            }
+        }
+        especimen.setImagenes3d(imagenes3dNuevas);
 
-        // Guardar el espécimen, lo que gracias al cascade persistirá las imágenes
+        // Guardar el espécimen (con cascade, las imágenes se persistirán)
         return especimenRepository.save(especimen);
     }
+
 
 
     @Override

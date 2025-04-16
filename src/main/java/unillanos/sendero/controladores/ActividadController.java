@@ -41,4 +41,30 @@ public class ActividadController {
     public void eliminarActividad(@PathVariable("id") Integer id){
         actividadService.eliminarActividad(id);
     }
+
+    @PutMapping("/{actividadId}/usuario/{usuarioId}")
+    public ResponseEntity<Actividad> agregarUsuarioAActividad(
+            @PathVariable("actividadId") Integer actividadId,
+            @PathVariable("usuarioId") Long usuarioId) {
+        try {
+            Actividad actividadActualizada = actividadService.agregarUsuario(actividadId, usuarioId);
+            return ResponseEntity.ok(actividadActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    // Endpoint para quitar un usuario de una actividad
+    @DeleteMapping("/{actividadId}/usuario/{usuarioId}")
+    public ResponseEntity<Actividad> quitarUsuarioAActividad(
+            @PathVariable("actividadId") Integer actividadId,
+            @PathVariable("usuarioId") Long usuarioId) {
+        try {
+            Actividad actividadActualizada = actividadService.quitarUsuario(actividadId, usuarioId);
+            return ResponseEntity.ok(actividadActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

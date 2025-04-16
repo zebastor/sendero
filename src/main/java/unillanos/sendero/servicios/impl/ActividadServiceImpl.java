@@ -45,14 +45,17 @@ public class ActividadServiceImpl implements ActividadService {
             // Actualizamos los campos que necesitemos. Por ejemplo:
             actividadExistente.setTitulo(actividad.getTitulo());
             actividadExistente.setEstacion(actividad.getEstacion());
+            actividadExistente.setFecha(actividad.getFecha());
             // Aquí puedes actualizar otros campos que tenga Actividad...
 
             // Actualizamos las asociaciones: buscamos los usuarios existentes según el ID
-            Set<Usuario> usuarios = actividad.getUsuarios().stream()
-                    .map(usuario -> usuarioRepository.findById(usuario.getId())
-                            .orElseThrow(() -> new RuntimeException("Usuario no encontrado")))
-                    .collect(Collectors.toSet());
-            actividadExistente.setUsuarios(usuarios);
+    if (actividad.getUsuarios() != null && !actividad.getUsuarios().isEmpty()) {
+        Set<Usuario> usuarios = actividad.getUsuarios().stream()
+                .map(usuario -> usuarioRepository.findById(usuario.getId())
+                        .orElseThrow(() -> new RuntimeException("Uusario no encontrado")))
+                .collect(Collectors.toSet());
+        actividadExistente.setUsuarios(usuarios);
+    }
 
             return actvidadRepository.save(actividadExistente);
         }
@@ -75,4 +78,40 @@ public class ActividadServiceImpl implements ActividadService {
         actividad.setId(id);
         actvidadRepository.delete(actividad);
     }
+
+    @Override
+    public Actividad agregarUsuario(Integer actividadId, Long usuarioId) {
+        Actividad actividad = actvidadRepository.findById(actividadId)
+                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Comprobar duplicados (opcional)
+        if (!actividad.getUsuarios().contains(usuario)) {
+            actividad.getUsuarios().add(usuario);
+        } else {
+            throw new RuntimeException("El usuario ya se encuentra inscrito en la actividad");
+        }
+        return actvidadRepository.save(actividad);
+    }
+
+
+
+
+    @Override
+    public Actividad quitarUsuario(Integer actividadId, Long usuarioId) {
+        Actividad actividad = actvidadRepository.findById(actividadId)
+                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Remueve el usuario si existe en la lista
+        if (actividad.getUsuarios().contains(usuario)) {
+            actividad.getUsuarios().remove(usuario);
+        } else {
+            throw new RuntimeException("El usuario no se encuentra inscrito en la actividad");
+        }
+        return actvidadRepository.save(actividad);
+    }
+
 }

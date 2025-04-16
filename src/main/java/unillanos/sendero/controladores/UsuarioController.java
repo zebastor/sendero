@@ -11,6 +11,8 @@ import unillanos.sendero.modelo.UsuarioRol;
 import unillanos.sendero.servicios.UsuarioService;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -64,4 +66,17 @@ public class UsuarioController {
     public Usuario actualizarUsuario(@RequestBody Usuario usuario){
         return usuarioService.actualizarUsuario(usuario);
     }
+
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<?> actualizarEstadoUsuario(@PathVariable Long id, @RequestBody Map<String, Boolean> payload) {
+        Boolean nuevoEstado = payload.get("enabled");
+        Usuario usuarioActualizado = usuarioService.actualizarEstadoUsuario(id, nuevoEstado);
+
+        if (usuarioActualizado != null) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

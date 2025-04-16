@@ -15,6 +15,7 @@ public interface EstacionService {
     Set<Estacion> obtenerEstaciones();
 
     Estacion obtenerEstacion(Integer id);
+    Estacion obtenerEstacionPorNumero(Integer numero);
 
     void eliminarEstacion(Integer id);
 }

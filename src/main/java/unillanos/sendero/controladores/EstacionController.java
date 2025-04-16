@@ -34,6 +34,10 @@ public class EstacionController {
     public Estacion listarEstacionPorId(@PathVariable("id") Integer id){
         return estacionService.obtenerEstacion(id);
     }
+    @GetMapping("/numero/{numero}")
+    public Estacion listarEstacionPorNumero(@PathVariable("numero") Integer numero){
+        return estacionService.obtenerEstacionPorNumero(numero);
+    }
 
 
     @PutMapping("/")

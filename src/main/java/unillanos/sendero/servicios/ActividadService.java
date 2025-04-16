@@ -16,4 +16,8 @@ public interface ActividadService {
     Actividad obtenerActividad(Integer id);
 
     void eliminarActividad(Integer id);
+
+    Actividad agregarUsuario(Integer actividadId, Long usuarioId);
+
+    Actividad quitarUsuario(Integer actividadId, Long usuarioId);
 }

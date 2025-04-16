@@ -25,4 +25,6 @@ public interface UsuarioService {
 
     Usuario guardarUsuariox(Usuario usuario, Set<UsuarioRol> usuarioRoles) throws Exception;
 
+    Usuario actualizarEstadoUsuario(Long id, boolean enabled);
+
 }
