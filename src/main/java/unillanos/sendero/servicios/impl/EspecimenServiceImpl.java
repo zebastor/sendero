@@ -7,6 +7,10 @@ import unillanos.sendero.modelo.*;
 import unillanos.sendero.repositorios.*;
 import unillanos.sendero.servicios.EspecimenService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -147,9 +151,49 @@ public class EspecimenServiceImpl implements EspecimenService {
     }
 
     @Override
+    @Transactional
     public void eliminarEspecimen(Integer id) {
-        Especimen especimen = new Especimen();
-        especimen.setId(id);
+        Especimen especimen = especimenRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Espécimen no encontrado con ID: " + id));
+
+        // Eliminar imágenes de la base de datos y del sistema de archivos
+        if (especimen.getImagenes() != null) {
+            for (Imagen imagen : especimen.getImagenes()) {
+                imagenRepository.delete(imagen);
+                eliminarArchivo("uploads", imagen.getDireccion()); // Nuevo método
+            }
+        }
+
+        // Eliminar imágenes 3D de la base de datos y del sistema de archivos
+        if (especimen.getImagenes3d() != null) {
+            for (Imagen3d imagen3d : especimen.getImagenes3d()) {
+                imagen3dRepository.delete(imagen3d);
+                eliminarArchivo("uploads3d", imagen3d.getDireccion()); // Nuevo método
+            }
+        }
+        for (Estacion estacion : especimen.getEstaciones()) {
+            estacion.getEspecimenes().remove(especimen);
+        }
+
+        especimen.getEstaciones().clear(); // Por seguridad
+
+        especimenRepository.delete(especimen);
+        // Eliminar relaciones y el espécimen
+        especimen.getEtapas().clear();
+        especimen.setReino(null);
         especimenRepository.delete(especimen);
     }
+
+    // Método auxiliar para eliminar archivos
+    private void eliminarArchivo(String directorio, String nombreArchivo) {
+        try {
+            Path filePath = Paths.get(directorio).resolve(nombreArchivo);
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            // Registrar el error (p.ej., con un logger)
+            System.err.println("Error al eliminar el archivo: " + nombreArchivo);
+            e.printStackTrace();
+        }
+    }
+
 }

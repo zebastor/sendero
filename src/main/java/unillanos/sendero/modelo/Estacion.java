@@ -29,13 +29,15 @@ public class Estacion {
 
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    // En Estacion.java
+    @ManyToMany
     @JoinTable(
             name = "estacion_especimen",
             joinColumns = @JoinColumn(name = "estacion_id"),
             inverseJoinColumns = @JoinColumn(name = "especimen_id")
     )
     private Set<Especimen> especimenes = new HashSet<>();
+
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "estacion")
